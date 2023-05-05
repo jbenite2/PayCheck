@@ -30,6 +30,7 @@ user = client.user.get_my_profile()
 # Define the start and end times for the time frame you want to retrieve payment requests for
 end_time = datetime.datetime.now()
 start_time = end_time - datetime.timedelta(days=7)
+total = 0
 
 # Get the first page of the user's transaction history
 transactions = client.user.get_user_transactions(
@@ -40,9 +41,14 @@ while transactions:
         date_completed = datetime.datetime.fromtimestamp(
             transaction.date_completed)
         if date_completed >= start_time:
-            print(f"Transaction: {transaction}")
+            print()
+            if(transaction.target.username != 'josebenitezz_'): #income
+                continue
+            print(transaction.actor.first_name.lower(), transaction.actor.last_name.lower())
+            print(f'Transaction amount: {transaction.amount}')
+            total += transaction.amount
+            print(f'Total income in the last week: {total}')
         else:
             transactions = None
             exit
 
-    print("\n" + "=" * 15 + "\n\tNEXT PAGE\n" + "=" * 15 + "\n")
